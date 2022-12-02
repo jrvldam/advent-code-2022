@@ -21,8 +21,8 @@ func main() {
 		return
 	}
 
-	// fmt.Println(getGreatestBagCalories(bags))
-	fmt.Println(getTheThreeGreatestBagCalories(bags))
+	fmt.Println("first part:", getGreatestBagCalories(bags))
+	fmt.Println("second part:", getTheThreeGreatestBagCalories(bags))
 }
 
 func getTheThreeGreatestBagCalories(bags [][]int) int {

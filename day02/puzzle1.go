@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -44,11 +45,12 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	defer inputFile.Close()
 
-	// result := getRoundsResult(inputFile)
-	result := getRoundsResult2(inputFile)
-
-	fmt.Println(result)
+	fmt.Println("first part:", getRoundsResult(inputFile))
+	// back cursor to beginning
+	inputFile.Seek(0, io.SeekStart)
+	fmt.Println("second part:", getRoundsResult2(inputFile))
 }
 
 func getRoundsResult2(inputFile *os.File) int {
