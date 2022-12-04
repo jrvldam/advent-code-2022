@@ -32,35 +32,21 @@ func findAllOverlappedAssignments(lines [][]string) int {
 }
 
 func hasOverlapped(assignments []string) bool {
-	left := strings.Split(assignments[0], "-")
-	right := strings.Split(assignments[1], "-")
-	leftLower, _ := strconv.ParseInt(left[0], 10, 32)
-	leftUpper, _ := strconv.ParseInt(left[1], 10, 32)
-	rightLower, _ := strconv.ParseInt(right[0], 10, 32)
-	rightUpper, _ := strconv.ParseInt(right[1], 10, 32)
+	left, right := getRangesFromAssignments(assignments)
 
-	var leftRange []int
-	for i := leftLower; i <= leftUpper; i += 1 {
-		leftRange = append(leftRange, int(i))
-	}
-	var rightRange []int
-	for i := rightLower; i <= rightUpper; i += 1 {
-		rightRange = append(rightRange, int(i))
-	}
-
-	if len(leftRange) >= len(rightRange) {
-    for _, n := range rightRange {
-      if isAInAs(n, leftRange) {
-        return true
-      }
-    }
+	if len(left) >= len(right) {
+		for _, n := range right {
+			if isAInAs(n, left) {
+				return true
+			}
+		}
 	} else {
-    for _, n := range leftRange {
-      if isAInAs(n, rightRange) {
-        return true
-      }
-    }
-  }
+		for _, n := range left {
+			if isAInAs(n, right) {
+				return true
+			}
+		}
+	}
 
 	return false
 }
@@ -77,35 +63,21 @@ func findAllFullyOverlappedAssignments(lines [][]string) int {
 }
 
 func hasFullOverlapped(assignments []string) bool {
-	left := strings.Split(assignments[0], "-")
-	right := strings.Split(assignments[1], "-")
-	leftLower, _ := strconv.ParseInt(left[0], 10, 32)
-	leftUpper, _ := strconv.ParseInt(left[1], 10, 32)
-	rightLower, _ := strconv.ParseInt(right[0], 10, 32)
-	rightUpper, _ := strconv.ParseInt(right[1], 10, 32)
+  left, right := getRangesFromAssignments(assignments)
 
-	var leftRange []int
-	for i := leftLower; i <= leftUpper; i += 1 {
-		leftRange = append(leftRange, int(i))
-	}
-	var rightRange []int
-	for i := rightLower; i <= rightUpper; i += 1 {
-		rightRange = append(rightRange, int(i))
-	}
-
-	if len(leftRange) >= len(rightRange) {
-    for _, n := range rightRange {
-      if !isAInAs(n, leftRange) {
-        return false
-      }
-    }
+	if len(left) >= len(right) {
+		for _, n := range right {
+			if !isAInAs(n, left) {
+				return false
+			}
+		}
 	} else {
-    for _, n := range leftRange {
-      if !isAInAs(n, rightRange) {
-        return false
-      }
-    }
-  }
+		for _, n := range left {
+			if !isAInAs(n, right) {
+				return false
+			}
+		}
+	}
 
 	return true
 }
@@ -120,8 +92,31 @@ func isAInAs(a int, as []int) bool {
 	return false
 }
 
-type assignment struct {
-  series []int
+func getRangesFromAssignments(assignments []string) (left []int, right []int) {
+	leftLower, leftUpper := getBounds(assignments[0])
+	rightLower, rightUpper := getBounds(assignments[1])
+
+	left = makeRange(leftLower, leftUpper)
+	right = makeRange(rightLower, rightUpper)
+
+	return left, right
+}
+
+func makeRange(lower, upper int) []int {
+	var series []int
+	for i := lower; i <= upper; i += 1 {
+		series = append(series, i)
+	}
+
+	return series
+}
+
+func getBounds(side string) (int, int) {
+	bounds := strings.Split(side, "-")
+	lower, _ := strconv.ParseInt(bounds[0], 10, 32)
+	upper, _ := strconv.ParseInt(bounds[1], 10, 32)
+
+	return int(lower), int(upper)
 }
 
 func getLines(file *os.File) [][]string {
