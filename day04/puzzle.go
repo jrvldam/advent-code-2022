@@ -35,14 +35,14 @@ func hasOverlapped(assignments []string) bool {
 	left, right := getRangesFromAssignments(assignments)
 
 	if len(left) >= len(right) {
-		for _, n := range right {
-			if isAInAs(n, left) {
+		for _, r := range right {
+			if left.Has(r) {
 				return true
 			}
 		}
 	} else {
-		for _, n := range left {
-			if isAInAs(n, right) {
+		for _, l := range left {
+			if right.Has(l) {
 				return true
 			}
 		}
@@ -63,17 +63,17 @@ func findAllFullyOverlappedAssignments(lines [][]string) int {
 }
 
 func hasFullOverlapped(assignments []string) bool {
-  left, right := getRangesFromAssignments(assignments)
+	left, right := getRangesFromAssignments(assignments)
 
 	if len(left) >= len(right) {
-		for _, n := range right {
-			if !isAInAs(n, left) {
+		for _, r := range right {
+			if !left.Has(r) {
 				return false
 			}
 		}
 	} else {
-		for _, n := range left {
-			if !isAInAs(n, right) {
+		for _, l := range left {
+			if !right.Has(l) {
 				return false
 			}
 		}
@@ -82,9 +82,11 @@ func hasFullOverlapped(assignments []string) bool {
 	return true
 }
 
-func isAInAs(a int, as []int) bool {
-	for _, n := range as {
-		if n == a {
+type array []int
+
+func (as array) Has(n int) bool {
+	for _, a := range as {
+		if a == n {
 			return true
 		}
 	}
@@ -92,7 +94,7 @@ func isAInAs(a int, as []int) bool {
 	return false
 }
 
-func getRangesFromAssignments(assignments []string) (left []int, right []int) {
+func getRangesFromAssignments(assignments []string) (left array, right array) {
 	leftLower, leftUpper := getBounds(assignments[0])
 	rightLower, rightUpper := getBounds(assignments[1])
 
@@ -102,8 +104,8 @@ func getRangesFromAssignments(assignments []string) (left []int, right []int) {
 	return left, right
 }
 
-func makeRange(lower, upper int) []int {
-	var series []int
+func makeRange(lower, upper int) array {
+	var series array
 	for i := lower; i <= upper; i += 1 {
 		series = append(series, i)
 	}
