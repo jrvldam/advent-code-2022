@@ -17,12 +17,12 @@ func (i input) GetContents(fileSystem fs.FS, filename string) ([]string, error) 
   }
   defer inputFile.Close()
 
-  i.getLines(inputFile)
+  i.scanLines(inputFile)
 
   return i.lines, nil
 }
 
-func (i *input) getLines(inputFile io.Reader) {
+func (i *input) scanLines(inputFile io.Reader) {
   scanner := bufio.NewScanner(inputFile)
 
   for scanner.Scan() {
@@ -30,6 +30,6 @@ func (i *input) getLines(inputFile io.Reader) {
   }
 }
 
-func NewReader() *input {
-  return &input{}
+func NewReader() input {
+  return input{}
 }

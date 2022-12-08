@@ -13,6 +13,7 @@ func TestGetFileContents(t *testing.T) {
 
   fileReader := NewReader()
   got, err := fileReader.GetContents(fs, "input")
+
   if err != nil {
     t.Fatalf("Reading file %v", err)
   }
